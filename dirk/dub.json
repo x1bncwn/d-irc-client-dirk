@@ -1,0 +1,47 @@
+{
+	"authors": [
+		"Jakob Ovrum"
+	],
+	"configurations": [
+		{
+			"name": "library",
+			"targetType": "library"
+		}
+	],
+	"copyright": "Copyright© Jakob Ovrum 2011-2013",
+	"description": "Standard-compliant, high-performance IRC library",
+	"homepage": "https://github.com/JakobOvrum/Dirk",
+	"importPaths": [
+		".",
+		"libev"
+	],
+	"libs-posix": [
+		"dl"
+	],
+	"libs-windows-gnu-ldc": [
+		"ev"
+	],
+	"license": "MIT",
+	"name": "dirk",
+	"sourceFiles-linux-x86": [
+		"extlib/x86_32-linux-gnu/libev.a"
+	],
+	"sourceFiles-linux-x86_64": [
+		"extlib/x86_64-linux-gnu/libev.a"
+	],
+	"sourceFiles-windows-x86-dmd": [
+		"extlib/ev.obj"
+	],
+	"sourcePaths": [
+		"irc",
+		"libev",
+		"ssl",
+		"loader"
+	],
+	"targetPath": "lib",
+	"targetType": "library",
+	"version": "0.2.0",
+	"dependencies": {
+		"openssl": "~>3.4.0"
+	}
+}

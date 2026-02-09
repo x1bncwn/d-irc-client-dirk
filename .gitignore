@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/pike-irc-client
+pike-irc-client.so
+pike-irc-client.dylib
+pike-irc-client.dll
+pike-irc-client.a
+pike-irc-client.lib
+pike-irc-client-test-*
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst

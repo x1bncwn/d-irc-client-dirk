@@ -1,0 +1,12 @@
+{
+	"debugVersions": ["Dirk"],
+	"dependencies": {
+		"gid:gtk4": "~>0.9.7",
+		"dirk": { "path": "dirk/" }
+	},
+	"lflags": ["-lev"],
+	"libs": ["ev"],
+	"name": "d-irc-client-dirk",
+	"targetType": "executable",
+	"versions": ["gtk4"]
+}

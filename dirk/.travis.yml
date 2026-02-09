@@ -1,0 +1,39 @@
+sudo: false
+
+language: d
+
+os:
+ - linux
+
+# Requires DMDFE 2.067+
+d:
+ - dmd-2.068.2
+ - dmd-2.067.1
+ - ldc-0.16.1
+# - gdc-5.2.0
+
+addons:
+  apt:
+    packages:
+     - gcc-multilib
+
+matrix:
+  allow_failures:
+   - env: ARCH=x86
+     d: gdc-5.2.0
+
+notifications:
+  email: false
+
+env:
+  global:
+    - secure: "Xa3ZSmQPQytDFrMBMdhO0ObnrIb0GdvUsz0LEKxHerQN/+qSos5In5WI7ATddJyCxK1RvvzaxWdiMRurfQSSW5vAW0KCRpXnEIZ1q70+WGgXH7eOT5ZVt0bHo3L2Jo9kYXwCSWxEfiQsREliEj5RXyD4SCbGFbeP2a/4x9A1VuI="
+  matrix:
+    - ARCH=x86
+    - ARCH=x86_64
+
+script:
+  dub test --arch=$ARCH;
+
+after_success:
+  - ./push-ddoc.sh
