@@ -45,8 +45,8 @@ class SslSocket : Socket
      */
     this(AddressFamily af)
     {
-	import std.socket : SocketType, ProtocolType;
-	import deimos.openssl.ssl : SSL_new, SSL_set_fd, SSL_set_verify, SSL_VERIFY_NONE, SSL_VERIFY_PEER;
+		import std.socket : SocketType, ProtocolType;
+		import deimos.openssl.ssl : SSL_new, SSL_set_fd, SSL_set_verify, SSL_VERIFY_NONE, SSL_VERIFY_PEER;
 
         initSslContext();
         
@@ -64,7 +64,7 @@ class SslSocket : Socket
     
     ~this()
     {
-	import deimos.openssl.ssl : SSL_shutdown, SSL_free;
+		import deimos.openssl.ssl : SSL_shutdown, SSL_free;
 
         if (ssl !is null)
         {
@@ -76,10 +76,10 @@ class SslSocket : Socket
     
     private int sslEnforce(const SSL* ssl, int result, string file = __FILE__, size_t line = __LINE__)
     {
-	import deimos.openssl.ssl : SSL_get_error;
-	import deimos.openssl.err : ERR_get_error, ERR_error_string;
-	import core.stdc.config : c_ulong;
-	import core.stdc.string : strlen;
+		import deimos.openssl.ssl : SSL_get_error;
+		import deimos.openssl.err : ERR_get_error, ERR_error_string;
+		import core.stdc.config : c_ulong;
+		import core.stdc.string : strlen;
 
         if(result <= 0)
         {
@@ -107,7 +107,7 @@ class SslSocket : Socket
     override:
     void connect(Address to) @trusted
     {
-	import deimos.openssl.ssl : SSL_connect;
+		import deimos.openssl.ssl : SSL_connect;
 
         super.connect(to);
         sslEnforce(ssl, SSL_connect(ssl));
@@ -115,7 +115,7 @@ class SslSocket : Socket
     
     ptrdiff_t receive(scope void[] buf, SocketFlags flags) @trusted
     {
-	import deimos.openssl.ssl : SSL_read;
+		import deimos.openssl.ssl : SSL_read;
 
         enforce(ssl !is null, "SSL object is null");
         auto result = sslEnforce(ssl, SSL_read(ssl, buf.ptr, cast(int)buf.length));
@@ -129,7 +129,7 @@ class SslSocket : Socket
     
     ptrdiff_t send(scope const(void)[] buf, SocketFlags flags) @trusted
     {
-	import deimos.openssl.ssl : SSL_write;
+		import deimos.openssl.ssl : SSL_write;
 
         enforce(ssl !is null, "SSL object is null");
         auto result = sslEnforce(ssl, SSL_write(ssl, buf.ptr, cast(int)buf.length));
