@@ -698,12 +698,12 @@ class GTKClient
         h = fmod(h, 360.0f);
         if (h < 0)
             h += 360.0f;
-        s = s < 0.0f ? 0.0f : (s > 1.0f ? 1.0f : s);
-        l = l < 0.0f ? 0.0f : (l > 1.0f ? 1.0f : l);
-		float c = (1.0f - abs(2.0f * l - 1.0f)) * s;
-        float x = c * (1.0f - abs(fmod(h / 60.0f, 2.0f) - 1.0f));
-		float m = l - c / 2.0f;
-        float r, g, b;
+	s = s < 0.0f ? 0.0f : (s > 1.0f ? 1.0f : s);
+	l = l < 0.0f ? 0.0f : (l > 1.0f ? 1.0f : l);
+	float c = (1.0f - abs(2.0f * l - 1.0f)) * s;
+	float x = c * (1.0f - abs(fmod(h / 60.0f, 2.0f) - 1.0f));
+	float m = l - c / 2.0f;
+	float r, g, b;
 
         if (h < 60)
         {
