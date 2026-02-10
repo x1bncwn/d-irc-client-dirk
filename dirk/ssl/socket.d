@@ -1,18 +1,16 @@
 module ssl.socket;
 
-import std.exception;
-import std.socket;
-
-// Import OpenSSL bindings
-import deimos.openssl.opensslv;
-import deimos.openssl.err;
-import deimos.openssl.ssl;
+import std.exception : enforce;
+import std.socket : Socket, SocketFlags, Address;
+import deimos.openssl.ssl : SSL_CTX;
 
 private __gshared SSL_CTX* sslContext;
 private __gshared bool sslContextInitialized = false;
 
 void initSslContext()
 {
+    import deimos.openssl.ssl : OPENSSL_init_ssl, OPENSSL_INIT_LOAD_SSL_STRINGS, TLS_client_method, SSL_CTX_new;
+
     if(!sslContextInitialized) {
         // Initialize OpenSSL
         int initResult = OPENSSL_init_ssl(OPENSSL_INIT_LOAD_SSL_STRINGS, null);
@@ -25,10 +23,7 @@ void initSslContext()
         
         sslContext = SSL_CTX_new(method);
         enforce(sslContext !is null, "SSL_CTX_new failed");
-        
-        // Disable certificate verification for IRC
-        // SSL_CTX_set_verify(sslContext, SSL_VERIFY_NONE, null);
-        
+
         sslContextInitialized = true;
     }
 }
@@ -38,6 +33,9 @@ void initSslContext()
  */
 class SslSocket : Socket
 {
+    import std.socket : AddressFamily;
+    import deimos.openssl.ssl : SSL;
+
     private:
     SSL* ssl;
     
@@ -47,21 +45,27 @@ class SslSocket : Socket
      */
     this(AddressFamily af)
     {
+	import std.socket : SocketType, ProtocolType;
+	import deimos.openssl.ssl : SSL_new, SSL_set_fd, SSL_set_verify, SSL_VERIFY_NONE, SSL_VERIFY_PEER;
+
         initSslContext();
         
         super(af, SocketType.STREAM, ProtocolType.TCP);
         
         enforce(sslContext !is null, "SSL context is null");
-        
+
         ssl = SSL_new(sslContext);
         enforce(ssl !is null, "SSL_new failed");
         
         SSL_set_fd(ssl, super.handle);
+
         SSL_set_verify(ssl, SSL_VERIFY_NONE, null);
     }
     
     ~this()
     {
+	import deimos.openssl.ssl : SSL_shutdown, SSL_free;
+
         if (ssl !is null)
         {
             SSL_shutdown(ssl);
@@ -72,8 +76,10 @@ class SslSocket : Socket
     
     private int sslEnforce(const SSL* ssl, int result, string file = __FILE__, size_t line = __LINE__)
     {
+	import deimos.openssl.ssl : SSL_get_error;
+	import deimos.openssl.err : ERR_get_error, ERR_error_string;
 	import core.stdc.config : c_ulong;
-        import core.stdc.string : strlen;
+	import core.stdc.string : strlen;
 
         if(result <= 0)
         {
@@ -101,12 +107,16 @@ class SslSocket : Socket
     override:
     void connect(Address to) @trusted
     {
+	import deimos.openssl.ssl : SSL_connect;
+
         super.connect(to);
         sslEnforce(ssl, SSL_connect(ssl));
     }
     
     ptrdiff_t receive(scope void[] buf, SocketFlags flags) @trusted
     {
+	import deimos.openssl.ssl : SSL_read;
+
         enforce(ssl !is null, "SSL object is null");
         auto result = sslEnforce(ssl, SSL_read(ssl, buf.ptr, cast(int)buf.length));
         return cast(ptrdiff_t)result;
@@ -119,6 +129,8 @@ class SslSocket : Socket
     
     ptrdiff_t send(scope const(void)[] buf, SocketFlags flags) @trusted
     {
+	import deimos.openssl.ssl : SSL_write;
+
         enforce(ssl !is null, "SSL object is null");
         auto result = sslEnforce(ssl, SSL_write(ssl, buf.ptr, cast(int)buf.length));
         return cast(ptrdiff_t)result;

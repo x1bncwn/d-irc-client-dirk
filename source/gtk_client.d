@@ -671,7 +671,7 @@ class GTKClient
 
         float hue = cast(float)(combined % 360);
         hue = hue * 0.618033988749895f;
-        hue = fmod(hue + 210.0f, 360.0f);
+        hue = fmod(hue, 360.0f);
 
         if (isDarkTheme)
         {

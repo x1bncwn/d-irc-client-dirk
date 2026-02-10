@@ -8,7 +8,7 @@ import std.array;
 import std.algorithm;
 
 immutable string defaultChannel = "#pike-test";
-immutable string defaultServer = "irc.deft.com";
+immutable string defaultServer = "irc.servercentral.net";
 immutable ushort defaultPort = 9999;
 immutable string defaultNick = "x2bncwn";
 
