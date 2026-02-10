@@ -954,13 +954,14 @@ class GTKClient
     private void processPendingMessages()
     {
     	// Outer loop: keep processing as long as flag was set
-    	do {
+    	do 
+		{
             // Inner loop: process all available messages
             bool gotMessage = true;
-	    while (gotMessage)
+			while (gotMessage)
             {
             	gotMessage = receiveTimeout(Duration.zero, (IrcToGtkMessage msg) {
-		    logToTerminal("Processing message of type: " ~ to!string(msg.type), "DEBUG", "main");
+					logToTerminal("Processing message of type: " ~ to!string(msg.type), "DEBUG", "main");
 
                     final switch (msg.type)
                     {
@@ -977,13 +978,13 @@ class GTKClient
                             }
                             appendChatMessage(display, data.timestamp, data.prefix ~ data.rawNick, data.messageType, data.body);
                             break;
-			case IrcToGtkType.channelUpdate:
-                           auto u = msg.channelUpdate;
-                           updateChannelList(u.server, u.channel, u.action);
-			   break;
-                    	case IrcToGtkType.systemMessage:
-			    auto sysMsg = msg.systemMsg;
-                            if (currentServer.length > 0)
+						case IrcToGtkType.channelUpdate:
+						    auto u = msg.channelUpdate;
+						    updateChannelList(u.server, u.channel, u.action);
+						    break;
+						case IrcToGtkType.systemMessage:
+						    auto sysMsg = msg.systemMsg;
+						    if (currentServer.length > 0)
                             {
                             	appendChatMessage(currentServer, formatTimestampNow(), "", "system", sysMsg.text);
                             }
@@ -998,9 +999,9 @@ class GTKClient
                             break;
                     }
                     return true;
-		});
-	    }
-	} while (atomicExchange(&pipeSignalPending, false));
+				});
+			}
+		} while (atomicExchange(&pipeSignalPending, false));
     }
 
     private void handleChannelTopic(string server, string channel, string topic)
