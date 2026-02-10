@@ -180,8 +180,8 @@ class MyIRCClient : IrcClient
         };
 
         onWhoisReply ~= (IrcUser user, in char[] realName) {
-	    string header = "--- WHOIS for " ~ user.nickName.idup ~ " ---";
-	    sendSystemMessage(header);
+			string header = "--- WHOIS for " ~ user.nickName.idup ~ " ---";
+			sendSystemMessage(header);
             string line = user.nickName.idup ~ " [" ~ user.userName.idup ~ "@" ~ user.hostName.idup ~ "] " ~ realName.idup;
             sendSystemMessage(line, SystemMsgType.whois);
         };
@@ -197,10 +197,10 @@ class MyIRCClient : IrcClient
         };
 
         onWhoisIdleReply ~= (in char[] nick, int idleTime, in char[] signonTime) {
-	    string idle = "Idle: " ~ formatDuration(idleTime);
-	    sendSystemMessage(idle, SystemMsgType.whois);
+			string idle = "Idle: " ~ formatDuration(idleTime);
+			sendSystemMessage(idle, SystemMsgType.whois);
             if (signonTime.length > 0) {
-		string signon = "Signed on: " ~ formatSignonTime(signonTime.idup);
+				string signon = "Signed on: " ~ formatSignonTime(signonTime.idup);
                 sendSystemMessage(signon, SystemMsgType.whois);
             }
         };
@@ -268,7 +268,7 @@ class MyIRCClient : IrcClient
 
         onNickInUse ~= (in char[] requestedNick) {
             string newNick = requestedNick.idup ~ "_";
-	    sendSystemMessage("Nickname " ~ requestedNick.idup ~ " is in use, trying " ~ newNick, SystemMsgType.warning);
+			sendSystemMessage("Nickname " ~ requestedNick.idup ~ " is in use, trying " ~ newNick, SystemMsgType.warning);
             return newNick;
         };
     }
@@ -382,7 +382,7 @@ void runIrcServer(string server, Tid gtkTid, int pipeFd)
 
         MyIRCClient client;
 
-	// SSL connection
+		// SSL connection
         if (useSsl) {
             import ssl.socket : SslSocket;
             import std.socket : AddressFamily;
