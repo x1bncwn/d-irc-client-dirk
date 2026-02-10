@@ -125,9 +125,6 @@ class CustomIrcTracker(Payload = void)
 		auto channel = _channels[channelName];
 
 		// Get prefix modes from client's ISUPPORT data
-		// Note: We need to access the client's internal prefixedChannelModes
-		// Since it's private, we'll need to add a getter or work around it
-		// For now, we'll use a helper function
 		auto prefixedModes = _client.getPrefixedChannelModes();
 
 		foreach(nickName; nickNames)
